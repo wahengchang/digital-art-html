@@ -1,0 +1,64 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Processing Demo</title>
+<script src="js/processing1.4.7.js" type="text/javascript"></script>
+ 
+</head>
+ 
+ <script>
+    var processingInstance;
+    function updateColor(newValue){
+        console.log("SLIDER: " + newValue);
+        processingInstance = Processing.getInstanceById('sketch');
+        processingInstance.changeBGColor(newValue);
+    }
+</script>
+ 
+<body>
+<script type="text/processing">
+int tWidth = 800;
+int tHeight = 600;
+int tRed = 255;
+ 
+float[] x = new float[20];
+float[] y = new float[20];
+float segLength = 18;
+
+void setup() {
+  size(tWidth, tHeight);
+  strokeWeight(9);
+  stroke(255, 100);
+}
+
+void draw() {
+  background(0);
+  dragSegment(0, mouseX, mouseY);
+  for(int i=0; i<x.length-1; i++) {
+    dragSegment(i+1, x[i], y[i]);
+  }
+}
+
+void dragSegment(int i, float xin, float yin) {
+  float dx = xin - x[i];
+  float dy = yin - y[i];
+  float angle = atan2(dy, dx);  
+  x[i] = xin - cos(angle) * segLength;
+  y[i] = yin - sin(angle) * segLength;
+  segment(x[i], y[i], angle);
+}
+
+void segment(float x, float y, float a) {
+  pushMatrix();
+  translate(x, y);
+  rotate(a);
+  line(0, 0, segLength, 0);
+  popMatrix();
+}
+</script>
+ 
+<canvas id='sketch' style="border: 1px solid black;"></canvas>
+    <div id="interface" style="width: 800px; height:100px;">
+ </div>
+</body>
+</html>
